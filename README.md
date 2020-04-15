@@ -10,7 +10,7 @@
   5. html loader
   6. url loader
 
-##### 4. vue运行时，编译器版本js加载
+##### 4. resolve别名配置，加载不同环境下vue版本，生产环境运行时版本runtime.esm版本，开发环境esm版本
 ##### 5. plugins配置
   1. HtmlWebpackPlugin
   2. CleanWebpackPlugin
@@ -36,8 +36,6 @@
 ##### 10. eslint配置
   1. eslint loader
 
-##### 11. devServer dist打包配置
-
 ## 2.项目目录结构
 pddir/public/index.html,favicon.icon
 pddir/src/views
@@ -51,4 +49,3 @@ pddir/webpack.config.js
 
 ## 3.问题
 vue项目中如何使用post-css
-dist目录

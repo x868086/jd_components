@@ -7,7 +7,17 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
   mode: 'development',
+
+  entry: path.join(__dirname,'./src/main.js'),
+  // 启动命令 webpack
+  output: {
+    filename: 'bundel.[hash:16].js',
+    path: path.join(__dirname, './dist'),
+    // 所有模块规范都适用
+    library: 'umd'
+  },
   
+  // 启动命令 webpack-dev-server --open --config ./webpack.config.js
   devServer: {
     contentBase: path.join(__dirname, './dist'),
     compress: true,
@@ -15,18 +25,7 @@ module.exports = {
     overlay: {errors: true},
     hot: true,
     port: 9000
-  },
-
-  entry: path.join(__dirname,'./src/main.js'),
-  // output: {
-  //   filename: 'bundel.[hash:8].[ext]',
-  //   path: path.join(__dirname, 'dist'),
-  //   library: 'umd'
-  // },
-  output: {
-    filename: '[name].min.js',
-    path: path.join(__dirname, './dist')
-  },
+  },  
 
   module: {
     rules:[
@@ -42,7 +41,7 @@ module.exports = {
             limit: 1024,
             // 关闭ES6模块导入方法，使用commonjs模块导入规范
             esModule: false,
-            name: 'resources/[path][name]-[hash:8].[ext]'
+            name: 'resources/[path][name]-[hash:16].[ext]'
           }
         }
       },
@@ -105,6 +104,6 @@ module.exports = {
     new HtmlWebpackPlugin({template: 'public/index.html'}),
     new VueLoaderPlugin(),
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({filename: "styles.[contentHash:8].css"})
+    new MiniCssExtractPlugin({filename: "styles.[chunkHash:16].css"})
   ]
 }
