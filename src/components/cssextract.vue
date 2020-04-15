@@ -6,8 +6,8 @@
 
 <script>
 export default {
-  name:'cssextract_component',
-  data() {
+  name: 'cssextract_component',
+  data () {
     return {
 
     }

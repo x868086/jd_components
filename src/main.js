@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-Vue.config.productionTip = false
-import './viewport'  // require('./viewport') 
+import './viewport'
+Vue.config.productionTip = false // require('./viewport')
 
 new Vue({
   render: (h) => h(App)
