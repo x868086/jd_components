@@ -1,10 +1,11 @@
 <template>
-  <div id="container">
+  <div :class="$style.container">
     <h1>hello</h1>
-    <div class="contenta">content a
-      <div class="contentb">contentb</div>
-      <img src="./assets/001.png" alt="#">
+    <div :class="$style.contenta">content a
+      <div :class="$style.contentb">contentb</div>
+      <img :class="$style.imga" src="./assets/001.png" alt="#">
       <button @click="handler">click</button>
+      <input type="text" name="" id="">{{inputvalue}}
       <jsxt></jsxt>
       <cssextractcomp></cssextractcomp>
     </div>
@@ -18,7 +19,8 @@ import cssextractcomp from './components/cssextract'
 export default {
   data() {
     return {
-      a_test:null
+      a_test:null,
+      inputvalue:null
     }
   },
   components: {
@@ -27,6 +29,7 @@ export default {
   },
   methods: {
     handler() {
+      alert('e')
       let b_test = 'k'
       this.a_test = b_test
     }
@@ -35,8 +38,8 @@ export default {
 </script>
 
 
-<style lang="scss">
-  #container {
+<style lang="scss" module>
+  .container {
     box-sizing: border-box;
     border-radius:50%;
     border:1px solid blue;
@@ -46,10 +49,10 @@ export default {
     align-items:flex-end;
     .contenta{
       border: 1px solid green;
-      img {
+      .imga {
         width:200px;
-        height:100px;
-        border:1px solid blue;
+        height:200px;
+        border:6px solid blue;
       }
       .contentb {
         border:1px solid yellow;

@@ -1,5 +1,5 @@
 <template>
-  <div class="cssextract_container">
+  <div :class="$style.cssextract_container">
     <h3>cssextract_comp</h3>
   </div>
 </template>
@@ -15,8 +15,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" module>
   .cssextract_container {
-    border:1px solid green;
+    border:2px solid red;
   }
 </style>

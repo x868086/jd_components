@@ -3,6 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const webpack = require('webpack')
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
 
 
 module.exports = {
@@ -11,7 +13,8 @@ module.exports = {
   entry: path.join(__dirname,'./src/main.js'),
   // 启动命令 webpack
   output: {
-    filename: 'bundel.[hash:16].js',
+    filename: '[name].[hash:8].js',
+    chunkFilename: '[name].[chunkhash:8].js',
     path: path.join(__dirname, './dist'),
     // 所有模块规范都适用
     library: 'umd'
@@ -23,7 +26,9 @@ module.exports = {
     compress: true,
     host: '127.0.0.1',
     overlay: {errors: true},
+    open:true,
     hot: true,
+    hotOnly:true,
     port: 9000
   },  
 
@@ -61,20 +66,48 @@ module.exports = {
         exclude:/node_modules/,
         include:/src/,
         use: [
-          'vue-style-loader',
+          // css分离后不需要再由vue-style-loader处理
+          // 'vue-style-loader',
           MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
-            options: { importLoaders: 1 }
+            options: {
+              // css-loader开启cssModule功能，自定义类名[local]_[hash:base64:8]
+              modules: true,
+              localIdentName: '[local]_[hash:base64:8]'
+            }
           },
-          'postcss-loader'
+          {
+            loader: 'px2rem-loader',
+            // options here
+            options: {
+              remUni: 75,
+              remPrecision: 8
+            }
+          }
         ]
       },
       {
         test:/\.(scss|sass)$/,
         exclude:/node_modules/,
         include:/src/,
-        use: ['vue-style-loader',MiniCssExtractPlugin.loader,'css-loader','sass-loader']        
+        use: [
+          // css分离后不需要再由vue-style-loader处理
+          // 'vue-style-loader',
+          MiniCssExtractPlugin.loader,
+        {
+          loader: 'css-loader',
+          options: { modules: true }
+        },
+        {
+          loader: 'px2rem-loader',
+          // options here
+          options: {
+            remUni: 75,
+            remPrecision: 8
+          }
+        },        
+        'sass-loader']        
       },
       {
         test:/\.vue$/,
@@ -100,10 +133,37 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
+
+  // webpack打包抽取
+  optimization: {
+    splitChunks: {
+      chunks: 'all', // 只对入口文件处理
+      cacheGroups: {
+          vendor: { // split `node_modules`目录下被打包的代码到 `vendor.js && .css` 没找到可打包文件的话，则没有。css需要依赖 `ExtractTextPlugin`
+              test: /node_modules\//,
+              name: 'vendor',
+              priority: 10,
+              enforce: true
+          },
+          commons: { // split `common`和`components`目录下被打包的代码到`commons.js && .css`
+              test: /common\/|components\//,
+              name: 'commons',
+              priority: 10,
+              enforce: true
+          }
+      }
+  },
+  runtimeChunk: {
+      name: 'runtime'
+  }    
+  },
+
   plugins:[
     new HtmlWebpackPlugin({template: 'public/index.html'}),
     new VueLoaderPlugin(),
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({filename: "styles.[chunkHash:16].css"})
+    new webpack.HotModuleReplacementPlugin(),
+    new MiniCssExtractPlugin({filename: "styles.[contenthash:8].css"}),
+    new BundleAnalyzerPlugin()
   ]
 }
